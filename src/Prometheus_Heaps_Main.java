@@ -29,8 +29,8 @@ class Graph {
 			System.out.println("IOExc " + e);
 		}
 	}
-	
-	Graph reverse(){
+
+	Graph reverse() {
 		Graph res = new Graph();
 		res.list = new ArrayList<HashSet<Integer>>();
 
@@ -43,12 +43,33 @@ class Graph {
 		return res;
 	}
 
-	// NEDODELANO
 	void StronglyConnected() {
 		ArrayList<Integer> fin = new ArrayList<Integer>();
+		DFSLoop(fin);
 		Graph g2 = reverse();
-		
-		
+		ArrayList<Set<Integer>> res = g2.DFSLoop2(new Iterable<Set<Integer>>() {
+
+			@Override
+			public Iterator<Set<Integer>> iterator() {
+				return new Iterator<Set<Integer>>() {
+					int n = 0;
+
+					@Override
+					public boolean hasNext() {
+						return n < fin.size();
+					}
+
+					@Override
+					public Set<Integer> next() {
+						return list.get(fin.get(n++));
+					}
+
+				};
+
+			}
+		});
+		for (Set<Integer> s : res)
+			System.out.println(s.size());
 	}
 
 	void DFSLoop(ArrayList<Integer> fin) {
@@ -69,12 +90,33 @@ class Graph {
 		return t;
 	}
 
+	ArrayList<Set<Integer>> DFSLoop2(Iterable<Set<Integer>> iter) {
+		Set<Integer> researched = new HashSet<Integer>();
+		ArrayList<Set<Integer>> listConnected = new ArrayList<>();
+		for (Set<Integer> s : iter)
+			if (!researched.contains(list.indexOf(s))) {
+				Set<Integer> setConnected = new HashSet<Integer>();
+				DFSRUtilCon2(list.indexOf(s), researched, setConnected);
+				listConnected.add(setConnected);
+			}
+		return listConnected;
+
+	}
+
+	void DFSRUtilCon2(int start, Set<Integer> researched, Set<Integer> setConnected) {
+		researched.add(start);
+		for (Integer i : list.get(start))
+			if (!researched.contains(i))
+				DFSRUtilCon2(i, researched, setConnected);
+		setConnected.add(start);
+	}
 }
 
 public class Prometheus_Heaps_Main {
 
 	public static void main(String[] args) {
 		Graph g = new Graph("test_08/test_08_1.txt");
+		g.StronglyConnected();
 
 	}
 
