@@ -4,25 +4,32 @@ import java.io.IOException;
 import java.util.*;
 
 class Graph {
-	ArrayList<HashSet<Integer>> list;
+	//ArrayList<HashSet<Integer>> list;/////////////////////////////////////////////////////////
+	HashMap<Integer, HashSet<Integer>> map;
 
 	Graph() {
 
 	}
 
 	Graph(String file) {
-		list = new ArrayList<HashSet<Integer>>();
+		//list = new ArrayList<HashSet<Integer>>();		//////////////////////////////////////
+		map = new HashMap<Integer, HashSet<Integer>>();
 		try (BufferedReader in = new BufferedReader(new FileReader(file))) {
 			while (in.ready()) {
 				try (Scanner sc = new Scanner(in.readLine())) {
 
 					int first = sc.nextInt(), second = sc.nextInt();
-					Set<Integer> set;
-					if ((set = list.get(first)) == null)
-						list.add(first, new HashSet<Integer>());
-					// if (list.get(second) == null)
-					// list.add(second, new HashSet<Integer>());
+					HashSet<Integer> set = null;
+					if (!map.containsKey(first)) {
+						//list.set(first, new HashSet<Integer>());////////////////////////////////////////
+						set = new HashSet<Integer>();
+						map.put(first, set);
+					}else {
+						set = map.get(first);
+					}
 					set.add(second);
+					if (!map.containsKey(second))
+					map.put(second, new HashSet<Integer>());
 				}
 			}
 		} catch (IOException e) {
@@ -32,13 +39,17 @@ class Graph {
 
 	Graph reverse() {
 		Graph res = new Graph();
-		res.list = new ArrayList<HashSet<Integer>>();
+		//res.list = new ArrayList<HashSet<Integer>>();///////////////////////////////////////////////
+		res.map = new HashMap<Integer, HashSet<Integer>>();
 
-		for (Set<Integer> s : list)
-			for (Integer i : s) {
-				if (res.list.get(i) == null)
-					res.list.add(i, new HashSet<Integer>());
-				res.list.get(i).add(list.indexOf(s));
+		for (Integer i : map.keySet())
+			for (Integer j : map.get(i)) {
+				if (!res.map.containsKey(j))
+					res.map.put(j, new HashSet<Integer>());
+				if (!res.map.containsKey(i))
+					res.map.put(i, new HashSet<Integer>());
+				//res.list.get(j).add(list.indexOf(i));///////////////////////////////////////////
+				res.map.get(j).add(i);
 			}
 		return res;
 	}
@@ -47,11 +58,11 @@ class Graph {
 		ArrayList<Integer> fin = new ArrayList<Integer>();
 		DFSLoop(fin);
 		Graph g2 = reverse();
-		ArrayList<Set<Integer>> res = g2.DFSLoop2(new Iterable<Set<Integer>>() {
+		ArrayList<Set<Integer>> res = g2.DFSLoop2(new Iterable<Integer>() {
 
 			@Override
-			public Iterator<Set<Integer>> iterator() {
-				return new Iterator<Set<Integer>>() {
+			public Iterator<Integer> iterator() {
+				return new Iterator<Integer>() {
 					int n = 0;
 
 					@Override
@@ -60,8 +71,9 @@ class Graph {
 					}
 
 					@Override
-					public Set<Integer> next() {
-						return list.get(fin.get(n++));
+					public Integer next() {
+						//return list.get(fin.get(n++));/////////////////////////////////////
+						return fin.get(n++);
 					}
 
 				};
@@ -74,15 +86,16 @@ class Graph {
 
 	void DFSLoop(ArrayList<Integer> fin) {
 		Set<Integer> researched = new HashSet<Integer>();
-		for (Set<Integer> s : list)
-			if (!researched.contains(list.indexOf(s)))
-				DFSRUtilCon(list.indexOf(s), researched, -1, fin);
+		int t = -1;
+		for (Integer i : map.keySet())
+			if (!researched.contains(i))
+				t = DFSRUtilCon(i, researched, t, fin);
 
 	}
 
 	int DFSRUtilCon(int start, Set<Integer> researched, int t, ArrayList<Integer> fin) {
 		researched.add(start);
-		for (Integer i : list.get(start))
+		for (Integer i : map.get(start))
 			if (!researched.contains(i))
 				t = DFSRUtilCon(i, researched, t, fin);
 		t = t + 1;
@@ -90,13 +103,13 @@ class Graph {
 		return t;
 	}
 
-	ArrayList<Set<Integer>> DFSLoop2(Iterable<Set<Integer>> iter) {
+	ArrayList<Set<Integer>> DFSLoop2(Iterable<Integer> iter) {
 		Set<Integer> researched = new HashSet<Integer>();
 		ArrayList<Set<Integer>> listConnected = new ArrayList<>();
-		for (Set<Integer> s : iter)
-			if (!researched.contains(list.indexOf(s))) {
+		for (Integer i : iter)
+			if (!researched.contains(i)) {
 				Set<Integer> setConnected = new HashSet<Integer>();
-				DFSRUtilCon2(list.indexOf(s), researched, setConnected);
+				DFSRUtilCon2(i, researched, setConnected);
 				listConnected.add(setConnected);
 			}
 		return listConnected;
@@ -105,7 +118,7 @@ class Graph {
 
 	void DFSRUtilCon2(int start, Set<Integer> researched, Set<Integer> setConnected) {
 		researched.add(start);
-		for (Integer i : list.get(start))
+		for (Integer i : map.get(start))
 			if (!researched.contains(i))
 				DFSRUtilCon2(i, researched, setConnected);
 		setConnected.add(start);
