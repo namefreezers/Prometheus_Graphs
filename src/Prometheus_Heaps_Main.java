@@ -4,7 +4,8 @@ import java.io.IOException;
 import java.util.*;
 
 class Graph {
-	//ArrayList<HashSet<Integer>> list;/////////////////////////////////////////////////////////
+	// ArrayList<HashSet<Integer>>
+	// list;/////////////////////////////////////////////////////////
 	HashMap<Integer, HashSet<Integer>> map;
 
 	Graph() {
@@ -12,7 +13,8 @@ class Graph {
 	}
 
 	Graph(String file) {
-		//list = new ArrayList<HashSet<Integer>>();		//////////////////////////////////////
+		// list = new ArrayList<HashSet<Integer>>();
+		// //////////////////////////////////////
 		map = new HashMap<Integer, HashSet<Integer>>();
 		try (BufferedReader in = new BufferedReader(new FileReader(file))) {
 			while (in.ready()) {
@@ -21,15 +23,16 @@ class Graph {
 					int first = sc.nextInt(), second = sc.nextInt();
 					HashSet<Integer> set = null;
 					if (!map.containsKey(first)) {
-						//list.set(first, new HashSet<Integer>());////////////////////////////////////////
+						// list.set(first, new
+						// HashSet<Integer>());////////////////////////////////////////
 						set = new HashSet<Integer>();
 						map.put(first, set);
-					}else {
+					} else {
 						set = map.get(first);
 					}
 					set.add(second);
 					if (!map.containsKey(second))
-					map.put(second, new HashSet<Integer>());
+						map.put(second, new HashSet<Integer>());
 				}
 			}
 		} catch (IOException e) {
@@ -39,7 +42,8 @@ class Graph {
 
 	Graph reverse() {
 		Graph res = new Graph();
-		//res.list = new ArrayList<HashSet<Integer>>();///////////////////////////////////////////////
+		// res.list = new
+		// ArrayList<HashSet<Integer>>();///////////////////////////////////////////////
 		res.map = new HashMap<Integer, HashSet<Integer>>();
 
 		for (Integer i : map.keySet())
@@ -48,7 +52,7 @@ class Graph {
 					res.map.put(j, new HashSet<Integer>());
 				if (!res.map.containsKey(i))
 					res.map.put(i, new HashSet<Integer>());
-				//res.list.get(j).add(list.indexOf(i));///////////////////////////////////////////
+				// res.list.get(j).add(list.indexOf(i));///////////////////////////////////////////
 				res.map.get(j).add(i);
 			}
 		return res;
@@ -72,14 +76,15 @@ class Graph {
 
 					@Override
 					public Integer next() {
-						//return list.get(fin.get(n++));/////////////////////////////////////
+						// return
+						// list.get(fin.get(n++));/////////////////////////////////////
 						return fin.get(n++);
 					}
 
 				};
 
 			}
-		});
+		}, fin);
 		for (Set<Integer> s : res)
 			System.out.println(s.size());
 	}
@@ -103,25 +108,36 @@ class Graph {
 		return t;
 	}
 
-	ArrayList<Set<Integer>> DFSLoop2(Iterable<Integer> iter) {
+	ArrayList<Set<Integer>> DFSLoop2(Iterable<Integer> iter, ArrayList<Integer> fin) {
 		Set<Integer> researched = new HashSet<Integer>();
 		ArrayList<Set<Integer>> listConnected = new ArrayList<>();
-		for (Integer i : iter)
-			if (!researched.contains(i)) {
+		int i = 0;
+		while (i < fin.size())
+			if (!researched.contains(fin.get(i))) {
 				Set<Integer> setConnected = new HashSet<Integer>();
-				DFSRUtilCon2(i, researched, setConnected);
+				i = DFSRUtilCon2(i, researched, setConnected, fin);
 				listConnected.add(setConnected);
 			}
+		/*
+		 * for (Integer i : iter) if (!researched.contains(i)) { Set<Integer>
+		 * setConnected = new HashSet<Integer>(); DFSRUtilCon2(i, researched,
+		 * setConnected, fin); listConnected.add(setConnected); }
+		 */
 		return listConnected;
 
 	}
 
-	void DFSRUtilCon2(int start, Set<Integer> researched, Set<Integer> setConnected) {
-		researched.add(start);
-		for (Integer i : map.get(start))
-			if (!researched.contains(i))
-				DFSRUtilCon2(i, researched, setConnected);
-		setConnected.add(start);
+	int DFSRUtilCon2(int startInd, Set<Integer> researched, Set<Integer> setConnected, ArrayList<Integer> fin) {
+		researched.add(fin.get(startInd));
+		setConnected.add(startInd);
+		Set<Integer> startSet = map.get(fin.get(startInd));
+		if (!researched.contains(fin.get(startInd+1)) && startSet.contains(fin.get(startInd + 1)))
+			while (!researched.contains(fin.get(startInd))
+					&& startSet.contains(fin.get(startInd + 1)))
+				startInd = DFSRUtilCon2(startInd + 1, researched, setConnected, fin);
+		else
+			startInd = startInd + 1;
+		return startInd;
 	}
 }
 
