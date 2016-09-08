@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.*;
 
 class Graph {
-	// ArrayList<HashSet<Integer>>
-	// list;/////////////////////////////////////////////////////////
 	HashMap<Integer, HashSet<Integer>> map;
 
 	Graph() {
@@ -13,8 +11,6 @@ class Graph {
 	}
 
 	Graph(String file) {
-		// list = new ArrayList<HashSet<Integer>>();
-		// //////////////////////////////////////
 		map = new HashMap<Integer, HashSet<Integer>>();
 		try (BufferedReader in = new BufferedReader(new FileReader(file))) {
 			while (in.ready()) {
@@ -23,8 +19,6 @@ class Graph {
 					int first = sc.nextInt(), second = sc.nextInt();
 					HashSet<Integer> set = null;
 					if (!map.containsKey(first)) {
-						// list.set(first, new
-						// HashSet<Integer>());////////////////////////////////////////
 						set = new HashSet<Integer>();
 						map.put(first, set);
 					} else {
@@ -42,8 +36,6 @@ class Graph {
 
 	Graph reverse() {
 		Graph res = new Graph();
-		// res.list = new
-		// ArrayList<HashSet<Integer>>();///////////////////////////////////////////////
 		res.map = new HashMap<Integer, HashSet<Integer>>();
 
 		for (Integer i : map.keySet())
@@ -52,7 +44,6 @@ class Graph {
 					res.map.put(j, new HashSet<Integer>());
 				if (!res.map.containsKey(i))
 					res.map.put(i, new HashSet<Integer>());
-				// res.list.get(j).add(list.indexOf(i));///////////////////////////////////////////
 				res.map.get(j).add(i);
 			}
 		return res;
@@ -89,17 +80,12 @@ class Graph {
 	ArrayList<Set<Integer>> DFSLoop2(ArrayList<Integer> fin) {
 		Set<Integer> researched = new HashSet<Integer>();
 		ArrayList<Set<Integer>> listConnected = new ArrayList<>();
-		for (int i = fin.size() - 1;i>=0; i--)
+		for (int i = fin.size() - 1; i >= 0; i--)
 			if (!researched.contains(fin.get(i))) {
 				Set<Integer> setConnected = new HashSet<Integer>();
 				DFSRUtilCon2(fin.get(i), researched, setConnected, fin);
 				listConnected.add(setConnected);
 			}
-		/*
-		 * for (Integer i : iter) if (!researched.contains(i)) { Set<Integer>
-		 * setConnected = new HashSet<Integer>(); DFSRUtilCon2(i, researched,
-		 * setConnected, fin); listConnected.add(setConnected); }
-		 */
 		return listConnected;
 
 	}
@@ -115,11 +101,9 @@ class Graph {
 }
 
 public class Prometheus_Heaps_Main {
-
+	
 	public static void main(String[] args) {
 		Graph g = new Graph("test_08/input_08.txt");
 		g.StronglyConnected();
-
 	}
-
 }
