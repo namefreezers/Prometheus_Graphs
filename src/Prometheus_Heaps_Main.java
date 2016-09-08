@@ -62,29 +62,7 @@ class Graph {
 		ArrayList<Integer> fin = new ArrayList<Integer>();
 		DFSLoop(fin);
 		Graph g2 = reverse();
-		ArrayList<Set<Integer>> res = g2.DFSLoop2(new Iterable<Integer>() {
-
-			@Override
-			public Iterator<Integer> iterator() {
-				return new Iterator<Integer>() {
-					int n = 0;
-
-					@Override
-					public boolean hasNext() {
-						return n < fin.size();
-					}
-
-					@Override
-					public Integer next() {
-						// return
-						// list.get(fin.get(n++));/////////////////////////////////////
-						return fin.get(n++);
-					}
-
-				};
-
-			}
-		}, fin);
+		ArrayList<Set<Integer>> res = g2.DFSLoop2(fin);
 		for (Set<Integer> s : res)
 			System.out.println(s.size());
 	}
@@ -108,14 +86,13 @@ class Graph {
 		return t;
 	}
 
-	ArrayList<Set<Integer>> DFSLoop2(Iterable<Integer> iter, ArrayList<Integer> fin) {
+	ArrayList<Set<Integer>> DFSLoop2(ArrayList<Integer> fin) {
 		Set<Integer> researched = new HashSet<Integer>();
 		ArrayList<Set<Integer>> listConnected = new ArrayList<>();
-		int i = 0;
-		while (i < fin.size())
+		for (int i = fin.size() - 1;i>=0; i--)
 			if (!researched.contains(fin.get(i))) {
 				Set<Integer> setConnected = new HashSet<Integer>();
-				i = DFSRUtilCon2(i, researched, setConnected, fin);
+				DFSRUtilCon2(fin.get(i), researched, setConnected, fin);
 				listConnected.add(setConnected);
 			}
 		/*
@@ -127,24 +104,20 @@ class Graph {
 
 	}
 
-	int DFSRUtilCon2(int startInd, Set<Integer> researched, Set<Integer> setConnected, ArrayList<Integer> fin) {
-		researched.add(fin.get(startInd));
-		setConnected.add(startInd);
-		Set<Integer> startSet = map.get(fin.get(startInd));
-		if (!researched.contains(fin.get(startInd+1)) && startSet.contains(fin.get(startInd + 1)))
-			while (!researched.contains(fin.get(startInd))
-					&& startSet.contains(fin.get(startInd + 1)))
-				startInd = DFSRUtilCon2(startInd + 1, researched, setConnected, fin);
-		else
-			startInd = startInd + 1;
-		return startInd;
+	void DFSRUtilCon2(int start, Set<Integer> researched, Set<Integer> setConnected, ArrayList<Integer> fin) {
+		researched.add(start);
+		setConnected.add(start);
+		Set<Integer> startSet = map.get(start);
+		for (int i : startSet)
+			if (!researched.contains(i))
+				DFSRUtilCon2(i, researched, setConnected, fin);
 	}
 }
 
 public class Prometheus_Heaps_Main {
 
 	public static void main(String[] args) {
-		Graph g = new Graph("test_08/test_08_1.txt");
+		Graph g = new Graph("test_08/input_08.txt");
 		g.StronglyConnected();
 
 	}
