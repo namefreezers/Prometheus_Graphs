@@ -49,13 +49,17 @@ class Graph {
 		return res;
 	}
 
-	void StronglyConnected() {
+	ArrayList<Set<Integer>> StronglyConnected() {
 		ArrayList<Integer> fin = new ArrayList<Integer>();
 		DFSLoop(fin);
+		System.out.println(new java.sql.Timestamp(new java.util.Date().getTime()));
+
 		Graph g2 = reverse();
+		System.out.println(new java.sql.Timestamp(new java.util.Date().getTime()));
+
 		ArrayList<Set<Integer>> res = g2.DFSLoop2(fin);
-		for (Set<Integer> s : res)
-			System.out.println(s.size());
+		System.out.println(new java.sql.Timestamp(new java.util.Date().getTime()));
+		return res;
 	}
 
 	void DFSLoop(ArrayList<Integer> fin) {
@@ -101,9 +105,17 @@ class Graph {
 }
 
 public class Prometheus_Graphs_Main {
-	
+
 	public static void main(String[] args) {
-		Graph g = new Graph("test_08/test_08_1.txt");
-		g.StronglyConnected();
+		System.out.println(new java.sql.Timestamp(new java.util.Date().getTime()));
+		Graph g = new Graph("test_08/input_08.txt");
+		System.out.println(new java.sql.Timestamp(new java.util.Date().getTime()));
+		ArrayList<Set<Integer>> list = g.StronglyConnected();
+		ArrayList<Integer> sizes = new ArrayList<Integer>();
+		for(Set<Integer> s : list)
+			sizes.add(s.size());
+		Collections.sort(sizes);
+		for (int i = sizes.size()-1; i>sizes.size()-6 ;i--)
+			System.out.println(sizes.get(i));
 	}
 }
