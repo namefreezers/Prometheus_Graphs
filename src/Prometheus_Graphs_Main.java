@@ -115,6 +115,7 @@ public class Prometheus_Graphs_Main {
 		for(Set<Integer> s : list)
 			sizes.add(s.size());
 		Collections.sort(sizes);
+		System.out.println(new java.sql.Timestamp(new java.util.Date().getTime()));
 		for (int i = sizes.size()-1; i>sizes.size()-6 ;i--)
 			System.out.println(sizes.get(i));
 	}
