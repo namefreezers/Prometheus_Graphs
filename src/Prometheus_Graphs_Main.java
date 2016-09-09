@@ -100,10 +100,10 @@ class Graph {
 	}
 }
 
-public class Prometheus_Heaps_Main {
+public class Prometheus_Graphs_Main {
 	
 	public static void main(String[] args) {
-		Graph g = new Graph("test_08/input_08.txt");
+		Graph g = new Graph("test_08/test_08_1.txt");
 		g.StronglyConnected();
 	}
 }
