@@ -14,21 +14,22 @@ class Graph {
 		map = new HashMap<Integer, HashSet<Integer>>();
 		try (BufferedReader in = new BufferedReader(new FileReader(file))) {
 			while (in.ready()) {
-				try (Scanner sc = new Scanner(in.readLine())) {
-
-					int first = sc.nextInt(), second = sc.nextInt();
-					HashSet<Integer> set = null;
-					if (!map.containsKey(first)) {
-						set = new HashSet<Integer>();
-						map.put(first, set);
-					} else {
-						set = map.get(first);
-					}
-					set.add(second);
-					if (!map.containsKey(second))
-						map.put(second, new HashSet<Integer>());
+				String[] str = in.readLine().split(" ");
+				int first = Integer.parseInt(str[0]), second = Integer.parseInt(str[1]);
+				
+				HashSet<Integer> set = null;
+				if (!map.containsKey(first)) {
+					set = new HashSet<Integer>();
+					map.put(first, set);
+				} else {
+					set = map.get(first);
 				}
+				set.add(second);
+				
+				if (!map.containsKey(second))
+					map.put(second, new HashSet<Integer>());
 			}
+
 		} catch (IOException e) {
 			System.out.println("IOExc " + e);
 		}
@@ -112,10 +113,10 @@ public class Prometheus_Graphs_Main {
 		System.out.println(new java.sql.Timestamp(new java.util.Date().getTime()));
 		ArrayList<Set<Integer>> list = g.StronglyConnected();
 		ArrayList<Integer> sizes = new ArrayList<Integer>();
-		for(Set<Integer> s : list)
+		for (Set<Integer> s : list)
 			sizes.add(s.size());
 		Collections.sort(sizes);
-		for (int i = sizes.size()-1; i>sizes.size()-6 ;i--)
+		for (int i = sizes.size() - 1; i > sizes.size() - 6; i--)
 			System.out.println(sizes.get(i));
 	}
 }
